@@ -35,11 +35,26 @@ You must be logged in to receive ratings. To get all ratings submitted by the lo
 
 ``` python
         {
+            "did_submit_today" : (true if user has already submitted a rating today or false if not),
             "ratings" : [ {
                 "date" : "Date rating was submitted as a string",
                 "rating" : (some integer from 0 to 4),
                 "description" : "Some string",
-                "did_submit_today" : (true if user has already submitted a rating today or false if not)
+            } 
+            ]
+        }
+
+```
+
+### Getting good ratings only from the user
+
+You must be logged in to receive ratings. To get all ratings submitted by the logged in users, send a GET request to the following URL: <http://host/data/getgoodtimes/>. You should receive a JSON response containing a list of ratings in the following format:
+
+``` python
+        {
+            "ratings" : [ {
+                "date" : "Date rating was submitted as a string",
+                "description" : "Some string",
             } 
             ]
         }

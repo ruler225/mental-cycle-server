@@ -10,16 +10,16 @@ def get_all_data(request):
     if not request.user.is_authenticated:
         return HttpResponseForbidden("Not logged in")
     
-
-    responseList = {"ratings" : []}
     ratings = DayRating.objects.getRatingsForUser(request.user)
 
+    responseList = {"ratings" : [],
+                    "did_submit_today" : (ratings.filter(date=datetime.date.now()).count() != 0) 
+}
 
     for rating in ratings:
         responseList["ratings"].append({"date" : rating.date,
                              "rating" : rating.rating,
-                             "description" : rating.description, 
-                             "did_submit_today" : (ratings.filter(date=datetime.date.now()).count() != 0) 
+                             "description" : rating.description,
                              })
 
     return JsonResponse(responseList)
@@ -33,3 +33,20 @@ def submit_rating(request):
     newRating = DayRating.objects.create(user=request.user, date=datetime.date.now(), description=data["description"], rating=data["rating"])
     newRating.save()
     return HttpResponse("Success")
+
+def get_good_times(request):
+    if not request.user.is_authenticated:
+        return HttpResponseForbidden("Not logged in")
+
+    responseList = {"ratings" : []}
+    ratings = DayRating.objects.getRatingsForUser(request.user).filter(rating=4)
+
+
+    for rating in ratings:
+        responseList["ratings"].append({"date" : rating.date,
+                             "rating" : rating.rating,
+                             "description" : rating.description,
+                             })
+
+    return JsonResponse(responseList)
+    
