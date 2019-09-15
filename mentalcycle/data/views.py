@@ -11,15 +11,15 @@ def get_all_data(request):
         return HttpResponseForbidden("Not logged in")
     
 
-    responseList = []
+    responseList = {"ratings" : []}
     ratings = DayRating.objects.getRatingsForUser(request.user)
 
 
     for rating in ratings:
-        responseList.append({"date" : rating.date,
+        responseList["ratings"].append({"date" : rating.date,
                              "rating" : rating.rating,
                              "description" : rating.description, 
-                             "did_submit_today" : (ratings.filter(date=datetime.date.now()) != []) 
+                             "did_submit_today" : (ratings.filter(date=datetime.date.now()).count() != 0) 
                              })
 
     return JsonResponse(responseList)
